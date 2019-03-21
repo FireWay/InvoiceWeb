@@ -1,0 +1,82 @@
+﻿<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../css/bootstrap/favicon.ico">
+
+    <title>功能</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="./css/carousel.css" rel="stylesheet"> -->
+  </head>
+  <body>
+
+        <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 ">
+            <a class="navbar-brand" href="../../features.php">
+              <img class="rounded-circle" src="../../img/home.jpeg"  width="25" height="25">
+              Home
+            </a>
+            <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
+
+            <ul class="navbar-nav px-3">
+              <li class="nav-item text-nowrap">
+                <a class="nav-link" href="../../userState.php">
+                  <img class="rounded-circle" src="../../img/login.ico"  width="25" height="25">
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <div class="container">
+            <div class="py-5 text-center">
+              <!-- <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+<h2>发票上传并识别</h2>
+<!-- <p>需要 invoice.php 在相同路徑下，手機端可以調用相機功能</p> -->
+<form action="invoice.php" method="post"
+enctype="multipart/form-data">
+<input class="form-control" type="file" name="file" id="file" accept="image/*" capture="camera" /> 
+<br />
+<input class="btn btn-primary btn-lg btn-block" type="submit" name="submit" value="提交" />
+</form>
+
+<div style = "padding:50px;"></div>
+
+<!--
+<h2>qrcode掃描</h2>
+<!-- <p>需要 qrcode.php 在相同路徑下，手機端可以調用相機功能</p> -->
+<!-- <form action="qrcode.php" method="post"
+enctype="multipart/form-data">
+<input class="form-control" type="file" name="file" id="file" accept="image/*" capture="camera" /> 
+<br />
+<input class="btn btn-primary btn-lg btn-block" type="submit" name="submit" value="Submit" />
+</form>
+-->
+              <!-- <p class="lead">Below is an example form built entirely with Bootstrap's form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p> -->
+            </div>
+          </div>
+
+      <!-- Wrap the rest of the page in another container to center all the content. -->
+
+      <!-- FOOTER -->
+      <!-- <footer class="container">
+        <p class="float-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2017-2018 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+      </footer> -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../css/bootstrap/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../css/bootstrap/assets/js/vendor/popper.min.js"></script>
+    <script src="../../css/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="../../css/bootstrap/assets/js/vendor/holder.min.js"></script>
+  </body>
+</html>

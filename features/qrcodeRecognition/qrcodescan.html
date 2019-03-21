@@ -1,0 +1,236 @@
+﻿<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../css/bootstrap/favicon.ico">
+
+    <title>二维码生成</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="./css/dashboard.css" rel="stylesheet"> -->
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand" href="../../features.php">
+        <img class="rounded-circle" src="../../img/home.jpeg"  width="25" height="25">
+        Home
+      </a>
+      <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="../../userState.php">
+            <img class="rounded-circle" src="../../img/login.ico"  width="25" height="25">
+          </a>
+        </li>
+     </ul>
+    </nav>
+
+    
+
+    <div class="container">
+        <div class="text-center">
+          <h2>二维码识别</h2>
+					<input class="form-control" type="file" id="newfile" accept="image/*" capture="camera" />
+					<p style="padding:15px;"></p>
+					<center><img id="image" width="300px" height="300px" /></center>
+					<center><p id="scan" style="width:100%; height:50px; margin-top:15px;"></p></center>
+					<input class="btn btn-primary btn-lg btn-block" type="button" id="submitqrcode" value="提交"/>
+				</div>
+    </div>
+
+
+	<script type="text/javascript" src="http://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+	<script src="reqrcode.js"></script>
+	<script>
+	var newfile = document.getElementById('newfile');
+	var submitqrcode = document.getElementById('submitqrcode');
+	var str = "";
+	
+	var getObjectURL = function (file) {
+		var url = null;
+		if (window.createObjectURL != undefined) {          	// basic
+			url = window.createObjectURL(file);
+		}else if (window.URL != undefined) {				// mozilla(firefox)
+        	url = window.URL.createObjectURL(file);
+		}else if (window.webkitURL != undefined) {         	// webkit or chrome
+			url = window.webkitURL.createObjectURL(file);
+		}
+		return url;
+	}
+
+
+	function utf8ToUtf16(s){
+		if(!s){
+			return;
+		}
+		
+		var i, codes, bytes, ret = [], len = s.length;
+		for(i = 0; i < len; i++){
+			codes = [];
+			codes.push(s.charCodeAt(i));
+			if(((codes[0] >> 7) & 0xff) == 0x0){
+				//单字节  0xxxxxxx
+				ret.push(s.charAt(i));
+			}else if(((codes[0] >> 5) & 0xff) == 0x6){
+				//双字节  110xxxxx 10xxxxxx
+				codes.push(s.charCodeAt(++i));
+				bytes = [];
+				bytes.push(codes[0] & 0x1f);
+				bytes.push(codes[1] & 0x3f);
+				ret.push(String.fromCharCode((bytes[0] << 6) | bytes[1]));
+			}else if(((codes[0] >> 4) & 0xff) == 0xe){
+				//三字节  1110xxxx 10xxxxxx 10xxxxxx
+				codes.push(s.charCodeAt(++i));
+				codes.push(s.charCodeAt(++i));
+				bytes = [];
+				bytes.push((codes[0] << 4) | ((codes[1] >> 2) & 0xf));
+				bytes.push(((codes[1] & 0x3) << 6) | (codes[2] & 0x3f));			
+				ret.push(String.fromCharCode((bytes[0] << 8) | bytes[1]));
+			}
+		}
+		return ret.join('');
+
+	}
+	
+	submitqrcode.onclick = function(){
+		//alert(str);
+		if(str == "" || str == "error decoding QR Code"){
+			alert("二维码错误");
+			return
+		}else{
+			//alert(str);
+			var arr=str.split("|");
+			post("qrcodesubmit.php",arr[1],arr[2],arr[3],arr[4],arr[5],arr[6],arr[7],arr[8]);
+		}
+	}
+	
+	newfile.onchange = function () {
+		console.log(getObjectURL(this.files[0]));         	// newfile[0]是通过input file上传的二维码图片文件
+		qrcode.decode(getObjectURL(this.files[0]));
+		
+		qrcode.callback = function (imgMsg) {
+			var ele = document.getElementById('scan');
+			str = utf8ToUtf16(imgMsg);
+			ele.innerHTML = str;
+		}
+
+		var file = document.getElementById("newfile").files[0];  
+		var reader = new FileReader();
+		reader.onload=function(e) {  
+			document.getElementById("image").src = e.target.result;	
+		}
+		reader.readAsDataURL(file);
+	}
+	
+	function post(URL,InvoiceNum,PurchaserName,SellerName,AmountInFiguers,InvoiceDate,InvoiceCode,SellerAddress,SellerRegisterNum)
+	{
+		var temp = document.createElement("form");
+		temp.action = URL;
+		temp.method = "post";
+		temp.style.display = "none";
+
+		var opt = document.createElement("textarea");
+		opt.name = "InvoiceNum";
+		opt.value = InvoiceNum;
+		temp.appendChild(opt);
+
+		var opt = document.createElement("textarea");
+		opt.name = "PurchaserName";
+		opt.value = PurchaserName;
+		temp.appendChild(opt);
+
+		var opt = document.createElement("textarea");
+		opt.name = "SellerName";
+		opt.value = SellerName;
+		temp.appendChild(opt);							
+		
+		var opt = document.createElement("textarea");
+		opt.name = "AmountInFiguers";
+		opt.value = AmountInFiguers;
+		temp.appendChild(opt);
+		var opt = document.createElement("textarea");
+		
+		opt.name = "InvoiceDate";
+		opt.value = InvoiceDate;
+		temp.appendChild(opt);	
+		
+		var opt = document.createElement("textarea");
+		opt.name = "InvoiceCode";
+		opt.value = InvoiceCode;
+		temp.appendChild(opt);	
+		
+		var opt = document.createElement("textarea");
+		opt.name = "SellerAddress";
+		opt.value = SellerAddress;
+		temp.appendChild(opt);
+		
+		var opt = document.createElement("textarea");
+		opt.name = "SellerRegisterNum";
+		opt.value = SellerRegisterNum;
+		temp.appendChild(opt);
+		
+		document.body.appendChild(temp);
+		temp.submit();
+		document.getElementById("rollback").submit();
+		return temp;
+	}
+	</script>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../css/bootstrap/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../css/bootstrap/assets/js/vendor/popper.min.js"></script>
+    <script src="../../css/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script>
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          datasets: [{
+            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
+            lineTension: 0,
+            backgroundColor: 'transparent',
+            borderColor: '#007bff',
+            borderWidth: 4,
+            pointBackgroundColor: '#007bff'
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: false
+              }
+            }]
+          },
+          legend: {
+            display: false,
+          }
+        }
+      });
+    </script>
+  </body>
+
+
+</html>
